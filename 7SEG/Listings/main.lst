@@ -1,0 +1,93 @@
+C51 COMPILER V9.55   MAIN                                                                  05/03/2016 11:04:38 PAGE 1   
+
+
+C51 COMPILER V9.55, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main
+                    -.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          /*
+   2          PROJECT Name: LED
+   3          Author      : Etiq Technologies
+   4          Created on  :16 April 2016
+   5          Description:  The Project is a demo project for interfacing 7segment displays 
+   6                        with AT89S8253 microcontroller .4 seven segment displays are 
+   7                        interfaced with port0 as the data port and port2 as the control 
+   8                        port.delay library and seven segment library file is included to 
+   9                        generate an up counter counting from 0-9999.with a delay of 1 sec.
+  10                        
+  11          
+  12          */
+  13          
+  14          
+  15          #include <REG8253.H>
+  16          #include "7seg.h"
+  17          #include "delay.h"
+  18          
+  19          unsigned char j=0;         //count to count the timer overflows to generate 1 sec delay
+  20          
+  21          /* Interrupt is enabled for timer1 and for every overflow of the timer1 count is incremented */
+  22             
+  23          void timer1(void) interrupt 3 //interrupt subroutine  
+  24          {
+  25   1      j++;
+  26   1      }
+  27          
+  28          
+  29          void main (void)
+  30          {
+  31   1      unsigned int i;
+  32   1      /*Enable the timer1 interrupt */
+  33   1        
+  34   1      ET1=1;               //timer1 interrupt enable
+  35   1      EA=1;                //global interrupt enable
+  36   1        
+  37   1      
+  38   1      /*infinite loop*/
+  39   1        
+  40   1      while(1)
+  41   1       {
+  42   2        /*counter loop for displaying from 0-9999*/ 
+  43   2          for(i=0;i<9999;i++)
+  44   2          {
+  45   3      TMOD=0x11;              //setting timer 1 in mode1
+  46   3      
+  47   3      /*timer1 register is loaded with calculated values to generate delay of 25ms such that 
+  48   3      40 multiples of overflows can create 1 sec delay*/  
+  49   3            
+  50   3      TL1=0XCB;          //LSB of the value in lower byte register     
+  51   3      TH1=0x7D;          //MSB of the value in higher byte register
+  52   3            
+  53   3      TR1=1;             //start timer1  
+  54   3      j=0;           //pre load the counter with 0
+C51 COMPILER V9.55   MAIN                                                                  05/03/2016 11:04:38 PAGE 2   
+
+  55   3            
+  56   3            
+  57   3      while(j<40)       //loop for 1 sec delay
+  58   3      { 
+  59   4      display_4digitnum(i);  //display the counter variable 
+  60   4      }
+  61   3        }
+  62   2      }
+  63   1        }
+  64          
+  65          /*=============================================================================
+  66          =============================================================================*/
+  67          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     61    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

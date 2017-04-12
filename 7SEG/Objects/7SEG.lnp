@@ -1,0 +1,6 @@
+".\Objects\STARTUP.obj",
+".\Objects\main.obj",
+".\Objects\delay.obj",
+".\Objects\7seg.obj" 
+TO ".\Objects\7SEG" 
+PRINT(".\Listings\7SEG.m51") RAMSIZE(256) 
